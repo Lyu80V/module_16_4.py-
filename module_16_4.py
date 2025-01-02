@@ -21,7 +21,7 @@ def get_users() -> List[User]:
 @app.post('/user/{username}/{age}') # запрос регистрация пользователя
 def create_user(username: Annotated[str, Path(min_length=5, max_length=20, description='Enter username')],
                     age: Annotated[int, Path(ge=18, le=120, description='Enter age')]) -> User:
-    new_id = (len(users) + 1) if users else 1
+    new_id = max((u.id for u in users), default=0) + 1
     new_user = User(id=new_id, username=username, age=age)
     users.append(new_user)
     return new_user
